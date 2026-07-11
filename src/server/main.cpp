@@ -27,7 +27,7 @@ using SillyConnection = NS_Socket::NS_Server::SillyConnection<TBuffer, vChunkSiz
 int main() {
     try {
         boost::asio::io_context ioContext;
-        TcpServer<SillyConnection<std::vector<char>, 65536>> server(
+        TcpServer<SillyConnection<std::vector<char>, ServerSettings::chunkSize>> server(
             ioContext.get_executor(), 
             Protocol::endpoint(Protocol::v6(), ServerSettings::port));
         ioContext.run();
