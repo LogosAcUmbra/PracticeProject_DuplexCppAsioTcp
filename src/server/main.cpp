@@ -1,8 +1,8 @@
-#include <boost/asio.hpp>
-#include <boost/asio/basic_stream_socket.hpp>
-#include <boost/asio/io_context.hpp>
-#include <boost/asio/ip/tcp.hpp>
 #include <vector>
+
+#include <boost/asio.hpp>
+
+#include "../shared/include/Loggings/InitSpdlog.hpp"
 #include "../shared/include/Socket/server/SillyConnection.hpp"
 #include "../shared/include/Socket/server/TcpServer.hpp"
 #include "../shared/include/ServerSettings/ServerSettings.hpp"
@@ -25,17 +25,25 @@ using SillyConnection = NS_Socket::NS_Server::SillyConnection<TBuffer, vChunkSiz
 
 
 int main() {
+    NS_Loggings::initSpdlog();
     try {
+
+
         boost::asio::io_context ioContext;
         TcpServer<SillyConnection<std::vector<char>, ServerSettings::chunkSize>> server(
             ioContext.get_executor(), 
             Protocol::endpoint(Protocol::v6(), ServerSettings::port));
         ioContext.run();
-    } catch (const std::exception& e) {
-        spdlog::critical("Unhandled exception in main: {}", e.what());
-    } catch (...) {
-        spdlog::critical("Unknown crash occurred!");
-    }
 
+        
+    } catch (const std::exception& e) {
+        spdlog::critical("--- FAILURE ENCOUNTERED ---");
+        spdlog::dump_backtrace();
+        spdlog::critical("Unhandled exception caught in main: {}", e.what());
+    } catch (...) {
+        spdlog::critical("--- FAILURE ENCOUNTERED ---");
+        spdlog::dump_backtrace();
+        spdlog::critical("Unknown crash caught in main");
+    }
     
 }

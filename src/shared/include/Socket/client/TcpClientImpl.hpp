@@ -5,7 +5,6 @@
 #include <cstring>
 #include <memory>
 #include <concepts>
-#include <type_traits>
 #include <utility>
 
 #include <boost/asio.hpp>
@@ -54,7 +53,7 @@ namespace TcpClientImpl {
     using BufferOf = typename TClient::Buffer;
 
     template <typename TClient> requires IsTcpClient<TClient>
-    static consteval std::size_t chunkSizeOf() { return Super::chunkSizeOf<TClient>(); }
+    inline consteval std::size_t chunkSizeOf() { return Super::chunkSizeOf<TClient>(); }
 
 
     // --- token concept function helpers ---
@@ -72,7 +71,7 @@ namespace TcpClientImpl {
     /// this function creates the TClient instance
     template <typename TClient, typename TConnectToken>
         requires IsConnectToken<TConnectToken, TClient>
-    static void asyncConnect(
+    inline void asyncConnect(
         const AsioIOExecutor &ioEx, 
         std::string_view host, std::string_view service, 
         TConnectToken &&token
@@ -107,7 +106,7 @@ namespace TcpClientImpl {
     /// this function creates the TClient instance
     template <typename TClient, typename TConnectToken>
         requires IsConnectToken<TConnectToken, TClient>
-    static void asyncConnect(
+    inline void asyncConnect(
         const AsioIOExecutor &ioEx, 
         const AsioIpAddress &address, AsioIpPort portNum, 
         TConnectToken &&token
@@ -131,7 +130,7 @@ namespace TcpClientImpl {
     template <typename TClient, typename TWriteToken>
         requires IsTcpClient<TClient>
             && IsWriteToken<TWriteToken, TClient>
-    static inline void asyncWriteMsg(
+    inline void asyncWriteMsg(
         std::unique_ptr<TClient> uSock, 
         std::string_view svMsg, 
         TWriteToken &&token
@@ -141,7 +140,7 @@ namespace TcpClientImpl {
         requires IsTcpClient<TClient>
             && IsWriteToken<TWriteToken, TClient> 
             && IsCharContainerNonLvalref<TCharContainer>
-    static inline void asyncWriteMsg(
+    inline void asyncWriteMsg(
         std::unique_ptr<TClient> uSock, 
         TCharContainer &&msg,
         TWriteToken &&token
@@ -150,7 +149,7 @@ namespace TcpClientImpl {
     template <typename TClient, typename TReadToken>
         requires IsTcpClient<TClient>
             && IsReadToken<TReadToken, TClient>
-    static void asyncRead(
+    void asyncRead(
         std::unique_ptr<TClient> uSock, 
         std::size_t numBytesToRead,
         TReadToken &&token

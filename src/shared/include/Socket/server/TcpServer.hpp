@@ -3,11 +3,10 @@
 #include <boost/asio.hpp>
 #include <boost/asio/any_io_executor.hpp>
 #include <spdlog/spdlog.h>
-#include <type_traits>
 
 
-#include "Socket/TcpSocketImpl.hpp"
 #include "Socket/fmtNetworkSocket.hpp"
+#include "Socket/TcpSocketImpl.hpp"
 #include "TcpConnectionImpl.hpp"
 
 namespace NS_Duplex {

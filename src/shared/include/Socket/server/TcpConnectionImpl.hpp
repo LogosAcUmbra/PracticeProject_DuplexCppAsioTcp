@@ -61,7 +61,7 @@ namespace TcpConnectionImpl {
     using BufferOf = typename TConn::Buffer;
 
     template <typename TConn> requires IsTcpConnection<TConn>
-    static consteval std::size_t chunkSizeOf() { return Super::chunkSizeOf<TConn>(); }
+    inline consteval std::size_t chunkSizeOf() { return Super::chunkSizeOf<TConn>(); }
 
     // --- token concept-behaving function helpers ---
     
@@ -76,7 +76,7 @@ namespace TcpConnectionImpl {
     template <typename TConn, typename TWriteToken>
         requires IsTcpConnection<TConn>
             && IsWriteToken<TWriteToken, TConn>
-    static inline void asyncWriteMsg(
+    inline void asyncWriteMsg(
         std::unique_ptr<TConn> uSock, 
         std::string_view svMsg, 
         TWriteToken &&token
@@ -86,7 +86,7 @@ namespace TcpConnectionImpl {
         requires IsTcpConnection<TConn>
             && IsWriteToken<TWriteToken, TConn> 
             && IsCharContainer<TCharContainer>
-    static inline void asyncWriteMsg(
+    inline void asyncWriteMsg(
         std::unique_ptr<TConn> uSock, 
         TCharContainer &&msg,
         TWriteToken &&token
@@ -95,7 +95,7 @@ namespace TcpConnectionImpl {
     template <typename TClient, typename TReadToken>
         requires IsTcpConnection<TClient>
             && IsReadToken<TReadToken, TClient>
-    static void asyncRead(
+    inline void asyncRead(
         std::unique_ptr<TClient> uSock, 
         std::size_t numBytesToRead,
         TReadToken &&token

@@ -1,10 +1,8 @@
 #pragma once
 
-#include <cstddef>
 #include <concepts>
 #include <ranges>
 #include <string_view>
-#include <tuple>
 #include <type_traits>
 
 namespace NS_Duplex {
@@ -35,14 +33,6 @@ concept IsCharContainerNonLvalref = IsCharContainer<T> && std::is_rvalue_referen
 // normally, u don't need a template type restricted to only l-value reference, think twice
 template <typename T>
 concept IsCharContainerLvalref = IsCharContainer<T> && std::is_lvalue_reference_v<T>;
-
-// --- static size ---
-
-template < typename T >
-concept IsStaticSizeCharContainer = 
-    IsCharContainer<T> 
-    && requires { std::tuple_size_v<T>; }
-;
 
 } // NS_CharContainer
 } // NS_Utils

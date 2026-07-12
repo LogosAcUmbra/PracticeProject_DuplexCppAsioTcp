@@ -6,13 +6,10 @@
 #include <string_view>
 #include <memory>
 #include <concepts>
-#include <tuple>
 #include <type_traits>
 
 #include <boost/asio.hpp>
 #include <spdlog/spdlog.h>
-#include <vector>
-
 
 
 #include "../utils/CharContainer.hpp"
@@ -27,9 +24,6 @@ namespace {
 
     template <typename T>
     concept IsCharContainerNonLvalref = NS_Duplex::NS_Utils::NS_CharContainer::IsCharContainerNonLvalref<T>;
-
-    template <typename T>
-    concept IsStaticSizeCharContainer = NS_Duplex::NS_Utils::NS_CharContainer::IsStaticSizeCharContainer<T>;
 
 }
 
@@ -73,7 +67,7 @@ namespace TcpSocketImpl {
     ;
 
 
-    static consteval bool vIsValidChunkSize(std::size_t vChunkSize) {
+    inline consteval bool vIsValidChunkSize(std::size_t vChunkSize) {
         return vChunkSize >= 1024;
     }
 
@@ -100,7 +94,7 @@ namespace TcpSocketImpl {
     using BufferOf = typename TSocket::Buffer;
 
     template <typename TSocket> requires (IsTcpSocket<TSocket>)
-    static consteval std::size_t chunkSizeOf() { return TSocket::vChunkSize; }
+    inline consteval std::size_t chunkSizeOf() { return TSocket::vChunkSize; }
 
     // --- token concept-behaving function helpers ---
 
@@ -126,7 +120,7 @@ namespace TcpSocketImpl {
     template <typename TSocket, typename TWriteToken>
         requires IsTcpSocket<TSocket>
             && IsWriteToken<TWriteToken, TSocket>
-    static void asyncWriteMsg(
+    inline void asyncWriteMsg(
         std::unique_ptr<TSocket> uSock, 
         std::string_view svMsg, 
         TWriteToken &&token
@@ -184,7 +178,7 @@ namespace TcpSocketImpl {
     requires IsTcpSocket<TSocket>
         && IsWriteToken<TWriteToken, TSocket> 
         && IsCharContainer<TCharContainer>
-    static void asyncWriteMsg(
+    inline void asyncWriteMsg(
         std::unique_ptr<TSocket> uSock, 
         TCharContainer &&msg, // universal reference
         TWriteToken &&token
@@ -221,7 +215,7 @@ namespace TcpSocketImpl {
     template <typename TSocket, typename TReadToken>
     requires IsTcpSocket<TSocket>
         && IsReadToken<TReadToken, TSocket>
-    static void asyncRead(
+    inline void asyncRead(
         std::unique_ptr<TSocket> uSock, 
         std::size_t numBytesToRead,
         TReadToken &&token
